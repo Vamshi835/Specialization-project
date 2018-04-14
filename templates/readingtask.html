@@ -1,0 +1,88 @@
+{%extends "base.html"%}
+{%block title%}Reading Task{%endblock%}
+{%block script%}
+<script type="text/javascript">
+$(function(){
+    var view = {}
+    view.test_name = "{{test_name}}";
+    view.section = "reading";
+    view.starttime = "{{starttime}}";
+    // $(window).bind("onbeforeunload", function () {
+    //   addviewrecord();
+    //   return "leaving the page";
+    // });
+    window.onbeforeunload = function(e){
+      addviewrecord(view);
+    };
+    function addviewrecord(view){
+      // view.endtime = datetime.now(IST);
+      $.ajax({
+          url: '/addviewrecord',
+          data: JSON.stringify(view),
+          type: 'POST',
+          success: function(response) {
+              //console.log(response);
+          },
+          error: function(error) {
+              //console.log(error);
+          }
+      });
+    }
+  });
+</script>
+{%endblock%}
+{%block body%}
+  <div class="container">
+  {% if task %}
+    <div class="row">
+      <h2 class="col-md-6">Reading Comprehension Task</h2>
+      <span class="col-md-6 text-right">
+        <br>
+        <a class="btn btn-primary" href="/startquiz/{{test_name}}">Back to Home Screen</a>
+      </span>
+    </div>
+    <hr>
+    {% if task.filepath %}
+      <div style="text-align:center; border:1px solid black;">
+        <iframe allowfullscreen="" height="500" width="100%" src="{{task.filepath}}" frameborder="0"></iframe>
+      	<div class="text-center">
+      	<button id="like" class="btn btn-default"><span style="font-size:22px; color:#337ab7" class="glyphicon glyphicon-thumbs-up text-center"></span></button>
+      	<button id="dislike" class="btn btn-default"><span style="font-size:22px; color:#a94442" class="glyphicon glyphicon-thumbs-down text-center"></span></button>
+      </div>
+      </div>
+    {% else %}
+      <h4>Reading Comprehension Task for today was not found on Server.</h4>
+    {% endif %}
+  {% else %}
+    <h2>You are not allowed to see this page at this moment. Please check back.</h2>
+  {% endif %}
+  </div>
+  <script>
+    $("#like").click(function(){
+      //console.log("clicked")
+      $.ajax({
+        type: "GET",
+        url: "/like/{{test_name}}/reading",
+        success: function(response) {
+            //console.log(response);
+        },
+        error: function(error) {
+            //console.log(error);
+        }
+      });
+    });
+
+    $("#dislike").click(function(){
+      $.ajax({
+        type: "GET",
+        url: "/dislike/{{test_name}}/reading",
+        success: function(response) {
+            //console.log(response);
+        },
+        error: function(error) {
+            //console.log(error);
+        }
+      });
+    });
+  </script>
+{%endblock%}

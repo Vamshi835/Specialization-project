@@ -1,0 +1,98 @@
+{%extends "Bar.html"%}
+{%block title%}View Status in Table{%endblock%}
+{%block script%}
+<script type="text/javascript">
+	function getResponses() {
+		$.ajax({
+			type: 'get',
+		    url: '/IndividualStatus/{{test_name}}/{{email}}',
+		    dataType:'json',
+		    success: function (data) {
+		    	// dat=JSON.parse(data);
+		    	// console.log(dat);
+		    	var s="";
+		    	var Score,Submitt;
+		    	var st="<div class='row'>"+"<div class= col-md-4 text-left>";
+		    	var str="<div class='table-responsive'><table class='table table-bordered'><trth><td align='center'><b>S. No</b></td><td align='center'><b>Question Number</b></td>";
+		    	str+="<td align='center'><b>Score</b></td>"+"<td align='center'><b>Submitted Answer</b></td>"+"<td align='center'><b>Response Time</b></td>";
+		    	// str+="<td align='center'><b>Status</b></td>";
+		    	str+="<td align='center'><b>TimeStamp</b></td>";
+		    	str+="</th>";
+		    	coun = 1;
+		    	var count;
+		    	$.each(data, function(key,valueObj){
+		    		$.each(valueObj,function(k,v) {
+		    			switch(k)
+		    			{
+		    				case "emailid":
+		    					st+="<h4><b>Email: </b>"+v+"</h4></div>";
+		    					break;
+		    				case "name":
+		    					st+="<div class= col-md-4 text-left><h4><b>Name: </b>"+v+"</h4></div>";
+		    					break;			
+		    				case "rollno":
+		    					st+="<div class= col-md-4 text-left><h4><b>Roll No: </b>"+v+"</h4></div>";
+		    					break;
+		    				case "Question_"+coun+"_Submittedans":
+		    					Submitt=v+"";
+		    					// str+="<td align='center'>"+v+"</td>";
+		    					break;
+		    				case "Question_"+coun+"_Score":
+		    					Score=v+"";
+		    					if (Score.localeCompare("1")==0) {count=8;}
+		    					else if(Score.localeCompare("0")==0 && Submitt.localeCompare("skip")==0) {count=10;}
+		    					else if(Score.localeCompare("0")==0 ) {count=7;}
+		    					// str+="<td align='center'>"+v+"</td>";
+		    					break;
+		    				case "Question_"+coun:
+		    					if (count==10) {str+="<tr class='warning'>";}
+		    					else if (count==8) {str+="<tr class='success'>";}
+		    					if (count==7) {str+="<tr class='danger'>";}
+		    					str+="<td align='center'>"+coun+"</td><td align='center'>"+v+"</td><td align='center'>"+Score+"</td><td>"+Submitt+"</td>";
+		    					count=0;
+		    					break;
+		    				case "Question_"+coun+"_Responsetime":
+		    					str+="<td align='center'>"+v+"</td>";
+		    					break;
+		    				case "Question_"+coun+"_Time":
+		    					str+="<td align='center'>"+v+"</td></tr>";
+		    					coun++;
+		    					break;	
+		    				// case "Question_"+coun+"_Status":
+		    				// 	str+="<td align='center'>"+v+"</td>";
+		    				// 	break;
+		    				default:
+		    					break;
+		    			}
+		    		});
+				});
+				st+="</div>"+str+"</table></div>";
+		    	$("#ch1").replaceWith(st);
+		    }
+		});
+	}
+	$(document).ready(function(){
+		getResponses();
+	});
+		setInterval(function(){ 
+    document.getElementById("refresh").click();
+}, 60000);
+</script>
+{%endblock%}
+{%block body%}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9 text-left">
+				<h3>Status Table</h3><br>
+			</div>
+			<div class="col-md-3 text-right" >
+				<a href="/getIndiviualStatusCsv/{{test_name}}/{{email}}" class="btn btn-primary" style="margin-top:15px">Download Status as CSV</a>
+				<a href="/getIndiviualStatusTable/{{test_name}}/{{email}}" class="btn btn-sm btn-default" style="margin-top:15px" id="refresh">Refresh</a>
+			</div>
+		</div>
+		<div class="row">
+			<div id="ch1"></div>
+		</div>
+	</div>
+{%endblock%}
+

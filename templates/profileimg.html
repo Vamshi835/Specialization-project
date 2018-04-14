@@ -1,0 +1,13 @@
+{%extends "base.html"%}
+{%block title%}Profile Page{%endblock%}
+{%block script%}
+
+{%endblock%}
+{%block body%}
+{%if session["user"]%}
+<div class="container-fluid" style="margin-top: 5px">
+	<img src="https://lh3.googleusercontent.com/-fixjovUCVdg/WMJqrurmOWI/AAAAAAAAATQ/zeuQdJhoSAQkIMWlZWxGl1F1exzFpf5wwCEwYBhgL/w139-h140-p/mypic.jpg" width="250" height="300" alt="profileimg">
+	<h1>{{session['user']['email']}}</h1>
+</div>
+{% endif %}
+{%endblock%}

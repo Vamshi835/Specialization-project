@@ -1,0 +1,87 @@
+{%extends "Bar.html"%}
+{%block title%}View Status in Table{%endblock%}
+{%block script%}
+<script type="text/javascript">
+	function getResponses() {
+		$.ajax({
+			type: 'get',
+		    url: '/getStatusTable/{{test_name}}',
+		    dataType:'json',
+		    success: function (data) {
+		    	var str="";
+		    	str+="<div><p><b>Note:</b><ul>";
+				str+="<li><b class='text-danger'>Red Colour Button</b> indicates that question is answered wrongly</li>";
+				str+="<li><b class='text-success'>Green Colour Button</b> indicates that question is answered correctly</li>";
+				str+="<li><b class='text-warning'>Yellow Colour Button</b> indicates that question is skipped</li>";
+				str+="<li><b class='text-default'>White Colour Button</b> indicates that question is not attempted</li></p></div><div>";
+		    	str+="<table class='table table-bordered'><trth><td><b>S. No</b></td><td><b>Student Email id</b></td>";
+		    	coun = 1;
+		    	$.each(data, function(key,valueObj){
+		    		if (key=="count") {
+		    			var i ;
+		    			for(i=1;i<=valueObj;i++)
+		    			{
+		    				str+="<td><b>"+i+"</b></td>";
+		    			}
+		    			str+="</th>";
+		    		}
+		    		else
+		    		{
+		    			console.log(key,valueObj)
+		    			str+="<tr>";
+		    			var str1="";
+		    			str1=str1+"<td>"+ coun++ +"</td>";
+		    			str1=str1+"<td><a href='/getIndiviualStatusTable/{{test_name}}/"+key+"'>"+key+"</a></td>";
+		    			var c=0;
+		    			$.each(valueObj,function(k,v)
+		    			{
+		    				$.each(v,function(ke,val)
+		    				{
+		    					c++;
+			    				var p="";
+			    				p+=val;
+			    				// var tr="<td><button class="+p+">"+"<a href='#'>"+ke+"</a></button></td>";
+			    				var tr="<td><button class="+p+">"+ke+"</button></td>";
+			    				// console.log(tr);
+			    				str1+=tr;
+		    				});
+		    			});
+		    			if(c<=0)
+		    			{
+		    				str1="";
+		    				coun--;
+		    			}
+		    			str+=str1+"</tr>"
+		    		}
+
+				});
+				str=str+"</table></div>";
+		    	$("#ch1").replaceWith(str);
+		    }
+		});
+	}
+	$(document).ready(function(){
+		getResponses();
+	});
+
+	setInterval(function(){ 
+    document.getElementById("refresh").click();
+}, 60000);
+</script>
+{%endblock%}
+{%block body%}
+	<div class="container">
+		<div class="row">
+			<div class="col-md-9 text-left">
+				<h3>Status Table of Test {{test_name}}</h3><br>
+			</div>
+			<div class="col-md-3 text-right" >
+				<a href="/ViewStatusasTable/{{test_name}}" class="btn btn-default" style="margin-top:15px" id="refresh">Refresh</a>
+			</div>
+		</div>
+		<div class="row">
+			<div id="ch1"></div>
+		</div>
+	</div>
+{%endblock%}
+

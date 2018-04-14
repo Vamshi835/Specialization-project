@@ -1,0 +1,7 @@
+static/content/
+venv/
+logs.log
+logs.log*
+env.py
+static/tmp_upload/
+__pycache__/

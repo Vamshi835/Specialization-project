@@ -1,0 +1,35 @@
+{%extends "Bar.html"%}
+{%block title%}Status{%endblock%}
+{%block script%}
+<script type="text/javascript">
+
+</script>
+{%endblock%}
+{%block body%}
+<div class="container">
+	<h3>Test Status</h3><br>
+		<div class="row">
+			<table class='table table-bordered'>
+			<thead>
+				<tr>
+					<th>S. No</th>
+					<th>Test Name</th>
+					<th>View Status as CSV</th>
+					<th>View Status as Table</th>
+				</tr>
+			</thead>
+			<tbody>
+				{%for test in tests%}
+					<tr>
+						<td>{{loop.index}}</td>
+						<td>{{test.name}}</td>
+						<td><a href="/ViewStatusasCsv/{{test.name}}" class="btn btn-sm btn-primary">Download Status as CSV</a></td>
+						<td><a href="/ViewStatusasTable/{{test.name}}" class="btn btn-sm btn-primary">View Status as Table</a></td>
+						</tr>
+				{%endfor%}
+			</tbody>
+			</table>
+
+		
+</div>
+{%endblock%}

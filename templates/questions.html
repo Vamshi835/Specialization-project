@@ -1,0 +1,27 @@
+{%extends "base.html"%}
+{%block title%}Questions{%endblock%}
+{%block script%}
+<script type="text/javascript">
+	$("#passage").on("keypress",function(e) {
+    var key = e.keyCode;
+
+    // If the user has pressed enter
+    if (key == 13) {
+        document.getElementById("passage").value =document.getElementById("passage").value + "\n";
+        return false;
+    }
+    else {
+        return true;
+    }
+});
+</script>
+{%endblock%}
+{%block body%}
+<div class="container centered">
+	<h4>Enter Passage: </h4>
+	<form action="/passage" method="POST">
+        <textarea rows="4" cols="50" id="passage"></textarea>
+        <button type="Submit" class="btn btn-primary btn-sm">Submit</button><br>
+	</form>
+</div>
+{%endblock%}
